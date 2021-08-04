@@ -166,7 +166,7 @@ controller.delete = async (req, res) => {
     try {
         const mahasiswa = await model.mahasiswa.destroy({
             where: {
-                nim: req.params.nim
+                nim: req.body.nim
             }
         });
         res.status(200).json({

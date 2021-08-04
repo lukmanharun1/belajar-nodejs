@@ -18,7 +18,7 @@ router.get('/search', controller.mahasiswa.getSearch);
 router.get('/:nim', controller.mahasiswa.getOne);
 router.post('/', upload.single('foto'), controller.mahasiswa.post);
 router.put('/:nim', controller.mahasiswa.put);
-router.delete('/:nim', controller.mahasiswa.delete);
+router.delete('/mahasiswaDelete', controller.mahasiswa.delete);
 
 
 module.exports = router;
