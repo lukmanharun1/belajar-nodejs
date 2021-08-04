@@ -3,7 +3,10 @@ const db = require('../database/mysql');
 
 const jurusan = require('./jurusan');
 const mahasiswa = db.define('mahasiswa', {
-    nim: Sequelize.INTEGER,
+    nim: {
+        type: Sequelize.INTEGER,
+        primaryKey: true
+    },
     nama: Sequelize.STRING,
     kd_jurusan: Sequelize.STRING,
     alamat: Sequelize.STRING,

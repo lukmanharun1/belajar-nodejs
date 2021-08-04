@@ -5,7 +5,11 @@ const controller = {};
 
 controller.getAll = async function (req, res) {
     try {
-        const mahasiswa = await model.mahasiswa.findAll({
+        const limit = parseInt(req.query.record);
+        let page = parseInt(req.query.page);
+        let  start = 0 + (page - 1) * limit;
+        let end = page + limit;
+        const mahasiswa = await model.mahasiswa.findAndCountAll({
             attributes: [
                 ['nim', 'nis'],
                 ['nama', 'nama mahasiswa'],
@@ -13,34 +17,34 @@ controller.getAll = async function (req, res) {
                 ['alamat', 'alamat'],
                 ['angkatan', 'tahun angkatan']
             ],
-            include: [
-                {
-                    model: model.jurusan
-                }
-            ],
-            where: {
-               angkatan: {
-                   [Op.between]: [2020, 2021]
-               }
-            },
+           
             order: [
                 ['angkatan', 'desc']
             ],
-            limit: 1
-            
+            limit: limit,
+            offset: start
         })
+        let countFiltered = mahasiswa.count;
+        let pagination = {};
+        pagination.tableRow = Math.ceil(countFiltered / limit);
+        if ( end < countFiltered) {
+            pagination.next = {
+                page: page + 1,
+                limit
+            }
+        }
+        if (start > 0) {
+            pagination.prev = {
+                page: page - 1,
+                limit
+            }
+        }
         // const mahasiswa = await db.query("SELECT mahasiswa.nim AS nimMahasiswa , mahasiswa.nama AS namaMahasiswa , mahasiswa.alamat AS alamat , mahasiswa.angkatan AS tahunAngkatan , mahasiswa.kd_jurusan AS kdJurusan, jurusan.nama_jurusan AS namaJurusan FROM mahasiswa JOIN jurusan ON mahasiswa.kd_jurusan = jurusan.kd_jurusan ORDER BY mahasiswa.nim ASC");
-            if (mahasiswa.length > 0) {
                 res.status(200).json({
                     message: 'Get Method Mahasiswa',
-                    data: mahasiswa
+                    pagination,
+                    data: mahasiswa.rows
                 })
-            } else {
-                res.status(200).json({
-                    message: 'Tidak ada Data',
-                    data: []
-                });
-            }
     } catch (error) {
         res.status(404).json({
             message: error.message
