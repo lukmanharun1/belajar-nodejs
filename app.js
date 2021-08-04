@@ -7,6 +7,10 @@ const mahasiswaRoutes = require('./routes/mahasiswa');
 const axiosRouter = require('./routes/axios');
 // const helmet = require('helmet');
 
+// swagger
+const swaggerUI = require('swagger-ui-express');
+const apiDocumentation = require('./apidocs.json');
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(apiDocumentation));
 // app.use(helmet());
 // app.use(basicAuth({
 //     users: {
