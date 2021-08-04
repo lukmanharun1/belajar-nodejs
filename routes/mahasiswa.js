@@ -1,10 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../config/mysql');
 
 router.get('/', (req, res, next) => {
-    res.status(200).json({
-        message: 'Get Method Mahasiswa',
-    });
+    let sql = "SELECT * FROM mahasiswa";
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+        res.status(200).json({
+            message: 'Get Method Mahasiswa',
+            data: result
+        });
+    })
 })
 
 router.post('/', (req, res, next) => {
@@ -20,18 +26,14 @@ router.post('/', (req, res, next) => {
 
 router.get('/:nim', (req, res, next) => {
     const nim = req.params.nim;
-    if (nim === '12345') {
+    let sql = "SELECT * FROM mahasiswa WHERE nim=" + nim;
+    db.query(sql, (err, result) => {
+        if (err) throw err;
         res.status(200).json({
-            message: 'NIM 12345'
-        })
-    } else {
-        res.status(200).send({
-            message: 'NIM LAIN'
-        })
-    }
-    res.status(200).json({
-        message: 'Get Method Mahasiswa',
-    });
+            message: 'Mahasiswa Ditemukan',
+            data: result
+        });
+    })
 })
 
 router.put('/', (req, res, next) => {

@@ -2,12 +2,14 @@ const mysql = require('mysql');
 
 const con = mysql.createConnection({
     host: 'localhost',
-    username: 'root',
+    user: 'root',
     password: '',
     database: 'kuliah'
 });
 
 con.connect(function(err) {
     if (err) throw err;
-    console.log('KOneksi berhasil!');
+    console.log('Koneksi berhasil!');
 })
+
+module.exports = con;
