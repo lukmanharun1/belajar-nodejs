@@ -1,25 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/mysql');
-
-router.get('/search', (req, res, next) => {
-    const nim = req.query.nim;
-    let sql = "SELECT * FROM mahasiswa WHERE nim = " + nim;
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-        if (result.length > 0) {
-            res.status(200).json({
-                message: 'Mahasiswa Ditemukan',
-                data: result
-            });
-        } else {
-            res.status(200).json({
-                message: 'Mahasiswa Tidak Ditemukan',
-                data: result
-            });
-        }
-    })
-})
+const db = require('../config/database/mysql');
+const controller = require('../controller/index');
+router.get('/', controller.mahasiswa.getAll);
 
 router.post('/', (req, res, next) => {
     const nim = req.body.nim;
