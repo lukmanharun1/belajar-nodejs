@@ -2,9 +2,23 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-
+const helmet = require(helmet);
+const basicAuth = require('express-basic-auth');
 const mahasiswaRoutes = require('./routes/mahasiswa');
+const helmet = require('helmet');
 
+app.use(helmet());
+app.use(basicAuth({
+    users: {
+        'admin': 'supersecret',
+    },
+    unauthorizedResponse: basicAuthResponse
+}));
+function basicAuthResponse(req) {
+    return req.auth 
+                ? `(Credensials ${req.auth.user} : ${req.auth.password} rejected)` 
+                : 'Unauthorized'
+}
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }))
