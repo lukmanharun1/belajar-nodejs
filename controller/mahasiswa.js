@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');
+const db = require('../config/database/mysql');
 const model = require('../config/model/index');
 const controller = {};
 
@@ -12,6 +13,11 @@ controller.getAll = async function (req, res) {
                 ['alamat', 'alamat'],
                 ['angkatan', 'tahun angkatan']
             ],
+            include: [
+                {
+                    model: model.jurusan
+                }
+            ],
             where: {
                angkatan: {
                    [Op.between]: [2020, 2021]
@@ -23,6 +29,7 @@ controller.getAll = async function (req, res) {
             limit: 1
             
         })
+        // const mahasiswa = await db.query("SELECT mahasiswa.nim AS nimMahasiswa , mahasiswa.nama AS namaMahasiswa , mahasiswa.alamat AS alamat , mahasiswa.angkatan AS tahunAngkatan , mahasiswa.kd_jurusan AS kdJurusan, jurusan.nama_jurusan AS namaJurusan FROM mahasiswa JOIN jurusan ON mahasiswa.kd_jurusan = jurusan.kd_jurusan ORDER BY mahasiswa.nim ASC");
             if (mahasiswa.length > 0) {
                 res.status(200).json({
                     message: 'Get Method Mahasiswa',
