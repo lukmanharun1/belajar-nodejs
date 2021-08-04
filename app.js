@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const basicAuth = require('express-basic-auth');
 const mahasiswaRoutes = require('./routes/mahasiswa');
+const jurusanRotes = require('./routes/jurusan');
 const axiosRouter = require('./routes/axios');
 // const helmet = require('helmet');
 
@@ -30,6 +31,7 @@ app.use(bodyParser.json());
 
 app.use('/mahasiswa', mahasiswaRoutes);
 app.use('/axios', axiosRouter);
+app.use('/jurusan', jurusanRotes);
 app.use((req, res, next) => {
     const error = new Error('Tidak Ditemukan');
     error.status = 404;
