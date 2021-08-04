@@ -122,7 +122,10 @@ controller.post = async (req, res) => {
         const mahasiswa = await model.mahasiswa.create({
             nim: req.body.nim,
             nama: req.body.nama,
-            jurusan: req.body.jurusan
+            kd_jurusan: req.body.kd_jurusan,
+            alamat: req.body.alamat,
+            angkatan: req.body.angkatan,
+            foto: req.file.path
         });
         res.status(201).json({
             message: 'Mahasiswa Berhasil ditambahkan',
