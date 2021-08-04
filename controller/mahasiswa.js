@@ -1,9 +1,28 @@
+const { Op } = require('sequelize');
 const model = require('../config/model/index');
 const controller = {};
 
 controller.getAll = async function (req, res) {
     try {
-        const mahasiswa = await model.mahasiswa.findAll()
+        const mahasiswa = await model.mahasiswa.findAll({
+            attributes: [
+                ['nim', 'nis'],
+                ['nama', 'nama mahasiswa'],
+                ['kd_jurusan', 'kodeJurusan'],
+                ['alamat', 'alamat'],
+                ['angkatan', 'tahun angkatan']
+            ],
+            where: {
+               angkatan: {
+                   [Op.between]: [2020, 2021]
+               }
+            },
+            order: [
+                ['angkatan', 'desc']
+            ],
+            limit: 1
+            
+        })
             if (mahasiswa.length > 0) {
                 res.status(200).json({
                     message: 'Get Method Mahasiswa',
@@ -46,6 +65,50 @@ controller.getOne = async (req, res) => {
         });
     }
 }
+
+controller.getSearch = async (req, res) => {
+    try {
+        const search = req.query.keyword;
+     const mahasiswa = await model.mahasiswa.findAll({
+        attributes: [
+            ['nim', 'nis'],
+            ['nama', 'nama mahasiswa'],
+            ['kd_jurusan', 'kodeJurusan'],
+            ['alamat', 'alamat'],
+            ['angkatan', 'tahun angkatan']
+        ],
+         where: {
+             [Op.or]: [
+                {
+                    nim: {
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {
+                    nama: {
+                        [Op.like]: `%${search}%`
+                    }
+                }
+            ]
+         }
+     });
+     if (mahasiswa.length > 0) {
+         res.status(200).json({
+             message: 'Mahasiswa Ditemukan',
+             data: mahasiswa
+         })
+     } else {
+         res.status(200).json({
+             message: 'Tidak ada Data',
+             data: []
+         });
+     }
+    } catch (error) {
+         res.status(404).json({
+             message: error.message
+         });
+     }
+ }
 
 controller.post = async (req, res) => {
     try {
